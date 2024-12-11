@@ -1,20 +1,39 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+
 #include "implot.h"
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 #include <GLFW/glfw3.h> // Include glfw3.h after our OpenGL declarations
 
+using std::cout;
+using std::endl;
+
+// float x_data = 0.0f;  // Single x value for current point
+// float y_data = 0.0f;  // Single y value for current point
+
+std::vector<float> x_data_all;
+std::vector<float> y_data_all;
+
 void RenderPlot(float x, float y)
 {
-    if (ImPlot::BeginPlot("Iterative Scatter Plot")) {
+    // x_data_all.push_back(x);
+    // y_data_all.push_back(y);
+
+    if (ImPlot::BeginPlot("Iterative Scatter Plot", ImVec2(-1, 0), ImPlotFlags_Equal)) {
         // Set up plot style, grid, etc.
         ImPlot::SetupAxes("X", "Y");
 
         // Render only the new point
-        ImPlot::PlotScatter("New Point", &x, &y, 1);  // Plot only the new point
+        ImPlot::PlotScatter("New Point", x_data_all.data(), y_data_all.data(), x_data_all.size());  // Plot only the new point
+        // Make axis equal
+
 
         ImPlot::EndPlot();
     }
+    cout << "vector size: " << x_data_all.size() << endl;
 }
 
 int main() {
@@ -61,8 +80,20 @@ int main() {
         ImGui::NewFrame();
 
         // Add a new point (for example, square of i)
-        x_data = static_cast<float>(i) * 0.0001;
-        y_data = static_cast<float>(i)*0.01 * static_cast<float>(i)*0.01;  // For example, square of x
+        for (int j=0; j<100; j++) {
+            float a = 0.001f;
+            float t = i * 0.01f;
+            x_data = a * t * cos(t);
+            y_data = a * t * sin(t);
+            x_data_all.push_back(x_data);
+            y_data_all.push_back(y_data);
+        }
+        float a = 0.001f;
+        float t = i * 0.01f;
+        // x_data = static_cast<float>(i) * 0.0001 * cos(static_cast<float>(i) * 0.01);
+        // y_data = static_cast<float>(i)*0.01 * static_cast<float>(i)*0.01 * sin(static_cast<float>(i) * 0.01);  // For example, square of x
+        x_data = a * t * cos(t);
+        y_data = a * t * sin(t);
 
         // Render the plot with only the new point
         RenderPlot(x_data, y_data);
