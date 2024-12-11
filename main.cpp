@@ -6,6 +6,7 @@
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
+#include "tic_toc_timer.h"
 #include <GLFW/glfw3.h> // Include glfw3.h after our OpenGL declarations
 
 using std::cout;
@@ -17,12 +18,14 @@ using std::endl;
 std::vector<float> x_data_all;
 std::vector<float> y_data_all;
 
+
 void RenderPlot(float x, float y)
 {
     // x_data_all.push_back(x);
     // y_data_all.push_back(y);
 
-    if (ImPlot::BeginPlot("Iterative Scatter Plot", ImVec2(-1, 0), ImPlotFlags_Equal)) {
+    if (ImPlot::BeginPlot("Iterative Scatter Plot", ImVec2(-1, -1), ImPlotFlags_Equal)) {
+    // if (ImPlot::BeginPlot("Iterative Scatter Plot", ImVec2(400, 400), ImPlotFlags_Equal)) {
         // Set up plot style, grid, etc.
         ImPlot::SetupAxes("X", "Y");
 
@@ -69,6 +72,9 @@ int main() {
     float y_data = 0;
 
     // Iteratively add points to the plot
+    TicTocTimer timer;
+    timer.tic();
+
     int i = 0;
     while (!glfwWindowShouldClose(window)) {
         // Poll and handle events
@@ -79,6 +85,8 @@ int main() {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
+        x_data_all.clear();
+        y_data_all.clear();
         // Add a new point (for example, square of i)
         for (int j=0; j<100; j++) {
             float a = 0.001f;
@@ -87,6 +95,7 @@ int main() {
             y_data = a * t * sin(t);
             x_data_all.push_back(x_data);
             y_data_all.push_back(y_data);
+            i++;
         }
         float a = 0.001f;
         float t = i * 0.01f;
@@ -99,7 +108,9 @@ int main() {
         RenderPlot(x_data, y_data);
 
         // Increment counter
-        i++;
+        // i++;
+        cout << "loop time: " << timer.toc().value<float>() << " s" << endl;
+        timer.tic();
 
         // Render ImGui
         ImGui::Render();

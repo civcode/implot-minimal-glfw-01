@@ -7,3 +7,6 @@
 [submodule "libs/glfw"]
 	path = libs/glfw
 	url = https://github.com/glfw/glfw.git
+[submodule "libs/tictoctimer"]
+	path = libs/tictoctimer
+	url = https://github.com/civcode/tic-toc-timer.git

@@ -11,6 +11,7 @@ find_package(OpenGL REQUIRED)
 set(IMGUI_DIR "${CMAKE_SOURCE_DIR}/libs/imgui")
 set(IMPLT_DIR "${CMAKE_SOURCE_DIR}/libs/implot")
 set(GLFW_DIR "${CMAKE_SOURCE_DIR}/libs/glfw")
+set(TIMER_DIR "${CMAKE_SOURCE_DIR}/libs/tictoctimer")
 
 # Add source files for ImGui and ImPlot
 set(IMGUI_SOURCES
@@ -28,11 +29,16 @@ set(IMPLT_SOURCES
     ${IMPLT_DIR}/implot_items.cpp  # ImPlot items file
 )
 
+set(TIMER_SOURCES
+    ${TIMER_DIR}/src/tic_toc_timer.cpp
+)
+
 # Include directories for the libraries
 include_directories(
     ${IMGUI_DIR}
     ${IMPLT_DIR}
     ${GLFW_DIR}
+    ${TIMER_DIR}/include
     ${OPENGL_INCLUDE_DIR}
 )
 
@@ -41,6 +47,7 @@ set(SOURCES
     main.cpp
     ${IMGUI_SOURCES}
     ${IMPLT_SOURCES}
+    ${TIMER_SOURCES}
 )
 
 # Create executable
